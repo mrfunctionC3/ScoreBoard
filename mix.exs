@@ -1,4 +1,4 @@
-defmodule Scoreboard.MixProject do
+defmodule ScoreBoard.MixProject do
   use Mix.Project
 
   def project do

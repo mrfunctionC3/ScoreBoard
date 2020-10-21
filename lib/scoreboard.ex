@@ -1,6 +1,6 @@
-defmodule Scoreboard do
+defmodule ScoreBoard do
   @moduledoc """
-  Documentation for Scoreboard.
+  Documentation for ScoreBoard.
   """
 
   use GenServer
@@ -15,7 +15,7 @@ defmodule Scoreboard do
   update user score.
 
   ## Examples
-      iex> Scoreboard.push(pid, {"king" => 100})
+      iex> ScoreBoard.push(pid, {"king" => 100})
       [{:hello, 1}, {"king", 100}]
   """
   def push(pid, {user, score}) do
@@ -26,7 +26,7 @@ defmodule Scoreboard do
   get user score.
 
   ## Examples
-      iex> Scoreboard.get(pid, "king"})
+      iex> ScoreBoard.get(pid, "king"})
       100
   """
   def get(pid, user) do
@@ -37,7 +37,7 @@ defmodule Scoreboard do
   delete user score record from state.
 
   ## Examples
-      iex> Scoreboard.del(pid, "king"})
+      iex> ScoreBoard.del(pid, "king"})
       [{:hello, 1}]
   """
   def del(pid, user) do
@@ -48,7 +48,7 @@ defmodule Scoreboard do
   get top 10 users score record from state.
 
   ## Examples
-      iex> Scoreboard.top(pid})
+      iex> ScoreBoard.top(pid})
       [{"king", 100}, {:hello, 1}]
   """
   def top(pid) do
@@ -108,15 +108,15 @@ end
 #:sys.get_state(pid)
 #:sys.get_status(pid)
 
-#{:ok, pid} = GenServer.start_link(Scoreboard, %{:hello => 1})
-#Scoreboard.push(pid, {"king", 100})
-#Scoreboard.push(pid, {"king", 100})
-#Scoreboard.push(pid, {"king1", 100})
-#Scoreboard.push(pid, {"king2", 100})
-#Scoreboard.push(pid, {"king3", 100})
-#Scoreboard.push(pid, {"king4", 100})
-#Scoreboard.push(pid, {"knight", 100})
-#Scoreboard.get(pid, :king)
-#Scoreboard.del(pid, :king)
-#Scoreboard.top(pid)
-#Scoreboard.clear(pid)
+#{:ok, pid} = GenServer.start_link(ScoreBoard, %{:hello => 1})
+#ScoreBoard.push(pid, {"king", 100})
+#ScoreBoard.push(pid, {"king", 100})
+#ScoreBoard.push(pid, {"king1", 100})
+#ScoreBoard.push(pid, {"king2", 100})
+#ScoreBoard.push(pid, {"king3", 100})
+#ScoreBoard.push(pid, {"king4", 100})
+#ScoreBoard.push(pid, {"knight", 100})
+#ScoreBoard.get(pid, :king)
+#ScoreBoard.del(pid, :king)
+#ScoreBoard.top(pid)
+#ScoreBoard.clear(pid)
