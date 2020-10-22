@@ -1,13 +1,13 @@
 defmodule ScoreBoard do
   @moduledoc """
-  Documentation for ScoreBoard.
+  score board system
   """
 
   use GenServer
 
   # Client
 
-  def start_link(default) when is_list(default) do
+  def start_link(default) when is_map(default) do
     GenServer.start_link(__MODULE__, default)
   end
 
@@ -15,18 +15,24 @@ defmodule ScoreBoard do
   update user score.
 
   ## Examples
-      iex> ScoreBoard.push(pid, {"king" => 100})
-      [{:hello, 1}, {"king", 100}]
+      iex> {:ok, pid} = ScoreBoard.start_link(%{:hello => 1})
+      iex> ScoreBoard.push(pid, {"king", 100})
+      {"king", 100}
   """
   def push(pid, {user, score}) do
-    GenServer.call(pid, {:push, %{user => score}})
+    if is_integer(score) do
+      GenServer.call(pid, {:push, {user, score}})
+    else
+      :error
+    end
   end
 
   @doc """
   get user score.
 
   ## Examples
-      iex> ScoreBoard.get(pid, "king"})
+      iex> {:ok, pid} = ScoreBoard.start_link(%{"king" => 100})
+      iex> ScoreBoard.get(pid, "king")
       100
   """
   def get(pid, user) do
@@ -37,8 +43,9 @@ defmodule ScoreBoard do
   delete user score record from state.
 
   ## Examples
-      iex> ScoreBoard.del(pid, "king"})
-      [{:hello, 1}]
+      iex> {:ok, pid} = ScoreBoard.start_link(%{:hello => 1})
+      iex> ScoreBoard.del(pid, "king")
+      :ok
   """
   def del(pid, user) do
     GenServer.call(pid, {:del, user})
@@ -48,13 +55,25 @@ defmodule ScoreBoard do
   get top 10 users score record from state.
 
   ## Examples
-      iex> ScoreBoard.top(pid})
-      [{"king", 100}, {:hello, 1}]
+      iex> {:ok, pid} = ScoreBoard.start_link(%{:hello => 1})
+      iex> ScoreBoard.push(pid, {"king", 100})
+      iex> ScoreBoard.push(pid, {"knight", 80})
+      iex> ScoreBoard.top(pid)
+      [{"king", 100}, {"knight", 80}, {:hello, 1}]
   """
   def top(pid) do
     GenServer.call(pid, :top)
   end
 
+  @doc """
+  clear users score record from state.
+
+  ## Examples
+      iex> {:ok, pid} = ScoreBoard.start_link(%{:hello => 1})
+      iex> ScoreBoard.push(pid, {"king", 100})
+      iex> ScoreBoard.clear(pid)
+      :ok
+  """
   def clear(pid) do
     GenServer.call(pid, :clear)
   end
@@ -76,15 +95,16 @@ defmodule ScoreBoard do
   end
 
   @impl true
-  def handle_call({:push, element}, _from, state) do
+  def handle_call({:push, {user, score}}, _from, state) do
+    element = %{user => score}
     state = Map.merge(state, element, fn _k, v1, v2 -> v1 + v2 end)
-    {:reply, Map.to_list(state), state}
+    {:reply, {user, Map.fetch!(state, user)}, state}
   end
 
   @impl true
   def handle_call({:del, user}, _from, state) do
     state = Map.delete(state, user)
-    {:reply, Map.to_list(state), state}
+    {:reply, :ok, state}
   end
 
   @impl true
@@ -102,21 +122,3 @@ defmodule ScoreBoard do
   end
 
 end
-
-#:sys.statistics(pid, true)
-#:sys.trace(pid, true)
-#:sys.get_state(pid)
-#:sys.get_status(pid)
-
-#{:ok, pid} = GenServer.start_link(ScoreBoard, %{:hello => 1})
-#ScoreBoard.push(pid, {"king", 100})
-#ScoreBoard.push(pid, {"king", 100})
-#ScoreBoard.push(pid, {"king1", 100})
-#ScoreBoard.push(pid, {"king2", 100})
-#ScoreBoard.push(pid, {"king3", 100})
-#ScoreBoard.push(pid, {"king4", 100})
-#ScoreBoard.push(pid, {"knight", 100})
-#ScoreBoard.get(pid, :king)
-#ScoreBoard.del(pid, :king)
-#ScoreBoard.top(pid)
-#ScoreBoard.clear(pid)
