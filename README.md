@@ -19,3 +19,5 @@ Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_do
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
 be found at [https://hexdocs.pm/scoreboard](https://hexdocs.pm/scoreboard).
 
+
+how to start multi process of module and process control for user
